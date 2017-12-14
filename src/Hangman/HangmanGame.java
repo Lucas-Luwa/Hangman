@@ -1,5 +1,7 @@
 package Hangman;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 import javax.swing.JFileChooser;
@@ -42,6 +44,13 @@ public class HangmanGame {
 	public void Operation() {
 		String s = JOptionPane.showInputDialog("Give a number");
 		numberofwords = Integer.parseInt(s);
-		FileReader fr = new FileReader(src/Hangman/dictionary.txt); 
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("src/Hangman/dictionary.txt"));
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
 	}
 }
