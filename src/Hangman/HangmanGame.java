@@ -22,14 +22,17 @@ public class HangmanGame implements KeyListener {
 	JLabel correct = new JLabel();
 	JLabel words = new JLabel();
 	String actualvalues = new String();
-	String underscores = "_ _ _ _ _ _ _ _ _ _ _ _ _ _ _";
+	String underscores = "";
 	int numberofwords;
+	String y;
+	int lives = 9;
 	Stack<String> wordSTK = new Stack<String>();
 
 	public static void main(String[] args) {
 		HangmanGame HG = new HangmanGame();
 		HG.Create();
 		HG.Operation();
+		HG.Run();
 	}
 
 	public void Create() {
@@ -41,7 +44,7 @@ public class HangmanGame implements KeyListener {
 		HangmanPanel.add(words);
 		words.setText(underscores);
 		HangmanPanel.add(Lives);
-		Lives.setText("You have lives left.");
+		Lives.setText("You have " + lives + " lives left.");
 		HangmanPanel.add(correct);
 		correct.setText("You got words correct");
 		HangmanFrame.addKeyListener(this);
@@ -51,11 +54,9 @@ public class HangmanGame implements KeyListener {
 		String s = JOptionPane.showInputDialog("Give a number");
 		numberofwords = Integer.parseInt(s);
 		for (int i = 0; i < numberofwords; i++) {
-
 			BufferedReader br;
 			try {
 				br = new BufferedReader(new FileReader("src/dictionary.txt"));
-
 				int random = new Random().nextInt(3000);
 				for (int j = 0; j < random; j++) {
 					br.readLine();
@@ -63,9 +64,7 @@ public class HangmanGame implements KeyListener {
 				String word = br.readLine();
 				if (wordSTK.contains(word)) {
 					i -= 1;
-
 				} else {
-
 					wordSTK.push(word);
 				}
 				br.close();
@@ -80,11 +79,40 @@ public class HangmanGame implements KeyListener {
 		System.out.println(wordSTK);
 	}
 
+	public void Run() {
+
+		y = wordSTK.pop();
+		int lengthofword = y.length();
+		for (int i = 0; i < lengthofword; i++) {
+			underscores += "_";
+			words.setText(underscores);
+
+		}
+	}
+
 	// use char c = e.getkeychar();
 	@Override
 	public void keyTyped(KeyEvent e) {
+		String temp = "";
+		int i;
 		// TODO Auto-generated method stub
+		for (i = 0; i < y.length(); i++) {
 
+			if (e.getKeyChar() == y.charAt(i)) {
+				temp += y.charAt(i);
+			} else {
+				System.out.println(temp);
+				temp += underscores.charAt(i);
+
+			}
+		}
+
+		System.out.println(temp);
+		System.out.println(underscores);
+		System.out.println(lives);
+		underscores = temp;
+		words.setText(underscores);
+		
 	}
 
 	@Override
