@@ -21,15 +21,17 @@ public class HangmanGame implements KeyListener {
 	JLabel Lives = new JLabel();
 	JLabel correct = new JLabel();
 	JLabel words = new JLabel();
-	String actualvalues = new String();
 	String underscores = "";
 	int numberofwords;
+
 	String y;
 	int lives = 9;
+	int WINS = 0;
 	Stack<String> wordSTK = new Stack<String>();
 
 	public static void main(String[] args) {
 		HangmanGame HG = new HangmanGame();
+		JOptionPane.showMessageDialog(null, "Hangman! Don't use Caps. Good Luck!");
 		HG.Create();
 		HG.Operation();
 		HG.Run();
@@ -51,7 +53,7 @@ public class HangmanGame implements KeyListener {
 	}
 
 	public void Operation() {
-		String s = JOptionPane.showInputDialog("Give a number");
+		String s = JOptionPane.showInputDialog("How many words would you like?");
 		numberofwords = Integer.parseInt(s);
 		for (int i = 0; i < numberofwords; i++) {
 			BufferedReader br;
@@ -80,8 +82,10 @@ public class HangmanGame implements KeyListener {
 	}
 
 	public void Run() {
-
+		lives = 9;
+		Lives.setText("You have " + lives + " lives left.");
 		y = wordSTK.pop();
+		y.toLowerCase();
 		int lengthofword = y.length();
 		for (int i = 0; i < lengthofword; i++) {
 			underscores += "_";
@@ -90,7 +94,6 @@ public class HangmanGame implements KeyListener {
 		}
 	}
 
-	// use char c = e.getkeychar();
 	@Override
 	public void keyTyped(KeyEvent e) {
 		String temp = "";
@@ -101,18 +104,42 @@ public class HangmanGame implements KeyListener {
 			if (e.getKeyChar() == y.charAt(i)) {
 				temp += y.charAt(i);
 			} else {
-				System.out.println(temp);
+				// System.out.println(temp);
 				temp += underscores.charAt(i);
 
 			}
 		}
 
-		System.out.println(temp);
-		System.out.println(underscores);
-		System.out.println(lives);
+		// System.out.println(temp);
+		// System.out.println(underscores);
+		// System.out.println(lives);
 		underscores = temp;
 		words.setText(underscores);
-		
+		if (underscores.contains("" + e.getKeyChar())) {
+
+		} else {
+			lives -= 1;
+			Lives.setText("You have " + lives + " lives left.");
+			if (lives == 0) {
+				HangmanFrame.dispose();
+				JOptionPane.showMessageDialog(null, "Game Over.");
+				JOptionPane.showMessageDialog(null, "The word was " + y);
+			}
+		}
+		if (underscores.equals(y)) {
+
+			underscores = "";
+			words.setText("");
+			WINS += 1;
+
+			if (WINS == numberofwords) {
+				HangmanFrame.dispose();
+				JOptionPane.showMessageDialog(null, "Congrats! You solved " + numberofwords + " words!");
+			} else {
+				Run();
+				lives = 9;
+			}
+		}
 	}
 
 	@Override
